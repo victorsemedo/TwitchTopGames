@@ -1,0 +1,13 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
+use_frameworks!
+
+target 'TwitchTopGames' do
+    pod 'Alamofire', '~> 4.4.0'
+end
+
+target 'TwitchTopGamesTests' do
+end
+
+target 'TwitchTopGamesUITests' do
+end
