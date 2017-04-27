@@ -36,7 +36,7 @@ class TTGMainViewController: UITableViewController {
     func loadTwitchGames(refreshControl:UIRefreshControl?)
     {
         if refreshControl == nil {
-            SVProgressHUD.show(withStatus: "Loading")
+            SVProgressHUD.show(withStatus: NSLocalizedString("STR_LOADING", comment:""))
         }
         self.twitchAPI.fetchTwitchGames {(result, error) in
             if error != nil {
@@ -134,8 +134,8 @@ class TTGMainViewController: UITableViewController {
     // MARK - UIAlertController
     
     func showAlertWithError(message:String) {
-        let alert = UIAlertController(title: "Error", message:message, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        let alert = UIAlertController(title: NSLocalizedString("STR_ERROR", comment: ""), message:message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("STR_OK", comment: ""), style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     

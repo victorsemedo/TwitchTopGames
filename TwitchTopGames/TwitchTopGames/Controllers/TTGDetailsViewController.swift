@@ -25,7 +25,7 @@ class TTGDetailsViewController: UIViewController {
         super.viewDidLoad()
         
         if let link = self.game?.box?.large {
-            SVProgressHUD.show(withStatus: "Loading")
+            SVProgressHUD.show(withStatus: NSLocalizedString("STR_LOADING", comment:""))
             self.uiImgGameBox.downloadedFrom(link: link, completion: {result in
                
                 if result != nil {
@@ -41,13 +41,13 @@ class TTGDetailsViewController: UIViewController {
         }
         
         if let viewers = self.game?.viewers {
-            self.uiLblViewers.text = "Viewers : " + "\(viewers)"
+            self.uiLblViewers.text = NSLocalizedString("STR_VIEWERS", comment:"") + "\(viewers)"
         }else {
             self.uiLblViewers.text = ""
         }
         
         if let channels = self.game?.viewers {
-            self.uiLblChannels.text = "Channels : " + "\(channels)"
+            self.uiLblChannels.text = NSLocalizedString("STR_CHANNELS", comment:"") + "\(channels)"
         }else {
             self.uiLblChannels.text = ""
         }

@@ -33,7 +33,7 @@ class TwitchApiManager: NSObject {
         Alamofire.request(TWITCH_API_URL).responseJSON { response in
             
             guard response.result.isSuccess else {
-                completionHandler([TTGGame](), "Error while fetching remote rooms: \(String(describing: response.result.error))")
+                completionHandler([TTGGame](), NSLocalizedString("STR_ERROR_TWICH", comment:""))
                 return
             }
             
@@ -46,11 +46,11 @@ class TwitchApiManager: NSObject {
                     completionHandler(gamesArray, nil)
                     return
                 }else {
-                    completionHandler([TTGGame](), "Malformed data received from Twitch service")
+                    completionHandler([TTGGame](), NSLocalizedString("STR_ERROR_TWICH", comment:""))
                     return
                 }
             }else {
-                completionHandler([TTGGame](), "Malformed data received from Twitch service")
+                completionHandler([TTGGame](), NSLocalizedString("STR_ERROR_TWICH", comment:""))
                 return
             }
         }

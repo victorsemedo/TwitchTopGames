@@ -1,0 +1,17 @@
+/* 
+  Localizable.strings
+  TwitchTopGames
+
+  Created by Victor tavares on 27/04/17.
+  Copyright © 2017 Victor Tavares. All rights reserved.
+*/
+
+
+"STR_ERROR" = "Error";
+"STR_OK" = "OK";
+"STR_EMPTY" = "Unable to load data";
+"STR_VIEWERS" = "Viewers : ";
+"STR_CHANNELS" = "Channels : ";
+"STR_ERROR_TWICH" = "Error while fetching data from Twitch Service.";
+"STR_ERROR_DATA" = "Malformed data received from Twitch Service.";
+"STR_LOADING" = "Loading";
