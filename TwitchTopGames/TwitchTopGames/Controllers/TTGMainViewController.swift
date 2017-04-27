@@ -7,17 +7,19 @@
 //
 
 import UIKit
+import SVProgressHUD
 
 class TTGMainViewController: UITableViewController {
 
+    var gamesArray:[TTGGame] = [TTGGame]()
+    
+    var selectedGame:TTGGame?
+    
+    let twitchAPI:TwitchApiManager = TwitchApiManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.loadTwitchGames();
     }
 
     override func didReceiveMemoryWarning() {
@@ -25,71 +27,95 @@ class TTGMainViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    // MARK: - Table view data source
-
+    
+    func loadTwitchGames()
+    {
+        SVProgressHUD.show(withStatus: "Loading")
+        self.twitchAPI.fetchTwitchGames { (result, error) in
+            if error != nil {
+            }
+            self.gamesArray = result!
+            self.tableView.reloadData()
+            SVProgressHUD.dismiss()
+        }
+    }
+    
+    
+    // MARK: - UITableViewDataSource
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return gamesArray.count
     }
-
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let gameCell = tableView.dequeueReusableCell(withIdentifier: "TTGTableViewCell", for: indexPath) as! TTGTableViewCell
+        let game = self.gamesArray[indexPath.row]
 
-        // Configure the cell...
+        gameCell.uilblGameTitle?.text = game.name
+        
+        if let link = game.box?.small {
+            gameCell.uiimgGameBox.isHidden = true
+            gameCell.uiIndLoading.isHidden = false
+            gameCell.uiIndLoading.startAnimating()
+            gameCell.uiimgGameBox?.downloadedFrom(link:link, completion: { result in
+                gameCell.uiimgGameBox.isHidden = false
+                gameCell.uiIndLoading.isHidden = true
+                gameCell.uiIndLoading.stopAnimating()
+            })
+        }
 
-        return cell
+        gameCell.uilblPosition?.text = "\(indexPath.row + 1)"
+
+        return gameCell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    // MARK: -  UITableViewDelegate
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated:true)
+        self.selectedGame = self.gamesArray[indexPath.row]
+        self.performSegue(withIdentifier: "showDetailsSegueID", sender: self)
     }
-    */
+    
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    // MARK: -  UIStoryboardSegue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+       
+        if(segue.identifier == "showDetailsSegueID") {
+            let vcDetails = (segue.destination as! TTGDetailsViewController)
+            vcDetails.game = self.selectedGame
+        }
     }
-    */
+}
 
+// MARK: -  Extensions
+
+extension UIImageView {
+   
+    func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit, completion: @escaping (Bool) -> Void) {
+        contentMode = mode
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard
+                let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
+                let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
+                let data = data, error == nil,
+                let image = UIImage(data: data)
+                else {
+                    completion(false)
+                    return
+            }
+            DispatchQueue.main.async() { () -> Void in
+                self.image = image
+                completion(true)
+            }
+            }.resume()
+    }
+    
+    func downloadedFrom(link: String, contentMode mode: UIViewContentMode = .scaleAspectFit, completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: link) else { return }
+        downloadedFrom(url: url, contentMode: mode, completion:completion)
+    }
 }

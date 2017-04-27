@@ -7,11 +7,39 @@
 //
 
 import UIKit
+import SVProgressHUD
 
 class TTGDetailsViewController: UIViewController {
 
+    var game:TTGGame?
+    
+    @IBOutlet weak var uiLblViewers: UILabel!
+    
+    @IBOutlet weak var uiLblChannels: UILabel!
+    
+    @IBOutlet weak var uiImgGameBox: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let link = self.game?.box?.large {
+            SVProgressHUD.show(withStatus: "Loading")
+            self.uiImgGameBox.downloadedFrom(link: link, completion: {result in
+                SVProgressHUD.dismiss()
+            })
+        }
+        
+        if let viewers = self.game?.viewers {
+            self.uiLblViewers.text = "Viewers : " + "\(viewers)"
+        }else {
+            self.uiLblViewers.text = ""
+        }
+        
+        if let channels = self.game?.viewers {
+            self.uiLblChannels.text = "Channels : " + "\(channels)"
+        }else {
+            self.uiLblChannels.text = ""
+        }
     }
 
     override func didReceiveMemoryWarning() {
