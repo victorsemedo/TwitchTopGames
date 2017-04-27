@@ -8,14 +8,17 @@
 
 import UIKit
 import SVProgressHUD
+import CoreData
 
 class TTGMainViewController: UITableViewController {
 
     var gamesArray:[TTGGame] = [TTGGame]()
     
-    var selectedGame:TTGGame?
+    var selectedRow:Int?
     
     let twitchAPI:TwitchApiManager = TwitchApiManager()
+    
+    let dataManager:TTGDataManager = TTGDataManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,15 +37,16 @@ class TTGMainViewController: UITableViewController {
         self.twitchAPI.fetchTwitchGames {(result, error) in
             if error != nil {
                 self.showAlertWithError(message:error!)
+                self.gamesArray = self.dataManager.fetchData()
+            }else {
+                self.gamesArray = result!
+                self.dataManager.saveData(gamesArray:self.gamesArray)
             }
-            
-            self.gamesArray = result!
             self.tableView.reloadData()
             SVProgressHUD.dismiss()
 
         }
     }
-    
     
     // MARK: - UITableViewDataSource
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -60,15 +64,23 @@ class TTGMainViewController: UITableViewController {
 
         gameCell.uilblGameTitle?.text = game.name
         
-        if let link = game.box?.small {
-            gameCell.uiimgGameBox.isHidden = true
-            gameCell.uiIndLoading.isHidden = false
-            gameCell.uiIndLoading.startAnimating()
-            gameCell.uiimgGameBox?.downloadedFrom(link:link, completion: { result in
-                gameCell.uiimgGameBox.isHidden = false
-                gameCell.uiIndLoading.isHidden = true
-                gameCell.uiIndLoading.stopAnimating()
-            })
+        if game.useImgData {
+            if let imageData = game.smallBox {
+                gameCell.uiimgGameBox.image = UIImage(data:imageData as Data)
+            }
+        }else {
+            if let link = game.box?.small{
+                gameCell.uiimgGameBox.isHidden = true
+                gameCell.uiIndLoading.isHidden = false
+                gameCell.uiIndLoading.startAnimating()
+                gameCell.uiimgGameBox?.downloadedFrom(link:link, completion: { result in
+                    gameCell.uiimgGameBox.isHidden = false
+                    gameCell.uiIndLoading.isHidden = true
+                    gameCell.uiIndLoading.stopAnimating()
+                    game.smallBox = NSData.init(data: result)
+                    self.dataManager.updateGame(game:game, rank: indexPath.row+1)
+                })
+            }
         }
 
         gameCell.uilblPosition?.text = "\(indexPath.row + 1)"
@@ -79,7 +91,7 @@ class TTGMainViewController: UITableViewController {
     // MARK: -  UITableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated:true)
-        self.selectedGame = self.gamesArray[indexPath.row]
+        self.selectedRow = indexPath.row
         self.performSegue(withIdentifier: "showDetailsSegueID", sender: self)
     }
     
@@ -89,7 +101,8 @@ class TTGMainViewController: UITableViewController {
        
         if(segue.identifier == "showDetailsSegueID") {
             let vcDetails = (segue.destination as! TTGDetailsViewController)
-            vcDetails.game = self.selectedGame
+            vcDetails.game = self.gamesArray[self.selectedRow!]
+            vcDetails.rank = self.selectedRow! + 1
         }
     }
     
@@ -100,7 +113,6 @@ class TTGMainViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-
     
 }
 
@@ -108,7 +120,7 @@ class TTGMainViewController: UITableViewController {
 
 extension UIImageView {
    
-    func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit, completion: @escaping (Bool) -> Void) {
+    func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit, completion: @escaping (Data) -> Void) {
         contentMode = mode
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard
@@ -117,18 +129,18 @@ extension UIImageView {
                 let data = data, error == nil,
                 let image = UIImage(data: data)
                 else {
-                    completion(false)
                     return
             }
             DispatchQueue.main.async() { () -> Void in
                 self.image = image
-                completion(true)
+                completion(data)
             }
             }.resume()
     }
     
-    func downloadedFrom(link: String, contentMode mode: UIViewContentMode = .scaleAspectFit, completion: @escaping (Bool) -> Void) {
+    func downloadedFrom(link: String, contentMode mode: UIViewContentMode = .scaleAspectFit, completion: @escaping (Data) -> Void) {
         guard let url = URL(string: link) else { return }
         downloadedFrom(url: url, contentMode: mode, completion:completion)
     }
+    
 }

@@ -33,7 +33,7 @@ class TwitchApiManager: NSObject {
         Alamofire.request(TWITCH_API_URL).responseJSON { response in
             
             guard response.result.isSuccess else {
-                completionHandler([TTGGame](), "Error while fetching remote rooms: \(response.result.error)")
+                completionHandler([TTGGame](), "Error while fetching remote rooms: \(String(describing: response.result.error))")
                 return
             }
             

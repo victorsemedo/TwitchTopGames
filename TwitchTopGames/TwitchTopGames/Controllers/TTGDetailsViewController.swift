@@ -13,6 +13,8 @@ class TTGDetailsViewController: UIViewController {
 
     var game:TTGGame?
     
+    var rank:Int?
+    
     @IBOutlet weak var uiLblViewers: UILabel!
     
     @IBOutlet weak var uiLblChannels: UILabel!
@@ -25,6 +27,8 @@ class TTGDetailsViewController: UIViewController {
         if let link = self.game?.box?.large {
             SVProgressHUD.show(withStatus: "Loading")
             self.uiImgGameBox.downloadedFrom(link: link, completion: {result in
+                self.game?.largeBox = NSData.init(data: result)
+                TTGDataManager().updateGame(game:self.game!, rank:self.rank!)
                 SVProgressHUD.dismiss()
             })
         }

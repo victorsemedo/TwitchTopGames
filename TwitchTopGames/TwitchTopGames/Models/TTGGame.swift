@@ -17,7 +17,10 @@ class TTGGame{
     var channels: Int?
     var viewers: Int?
     var box: TTGBox?
-    
+    var smallBox: NSData?
+    var largeBox: NSData?
+    var useImgData: Bool = false
+
     init(json: JSON) {
         self.id = json[TTGTAG.game][TTGTAG.id].stringValue
         self.name = json[TTGTAG.game][TTGTAG.name].stringValue
@@ -26,4 +29,12 @@ class TTGGame{
         self.box = TTGBox.init(json: json[TTGTAG.game][TTGTAG.box])
     }
     
+    init(game:Game) {
+        self.name = game.name
+        self.channels = Int(game.channels)
+        self.viewers = Int(game.viewers)
+        self.largeBox = game.largeBox
+        self.smallBox = game.smallBox
+        self.useImgData = true
+    }
 }

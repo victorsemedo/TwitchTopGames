@@ -15,9 +15,12 @@ struct TTGTAG {
     static let game = "game"
     static let id = "_id"
     static let large = "large"
+    static let largeBox = "largeBox"
     static let medium = "medium"
     static let name = "name"
+    static let rank = "rank"
     static let small = "small"
+    static let smallBox = "smallBox"
     static let top = "top"
     static let viewers = "viewers"
     
