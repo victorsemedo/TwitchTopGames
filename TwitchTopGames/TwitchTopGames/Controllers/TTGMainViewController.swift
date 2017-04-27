@@ -31,12 +31,15 @@ class TTGMainViewController: UITableViewController {
     func loadTwitchGames()
     {
         SVProgressHUD.show(withStatus: "Loading")
-        self.twitchAPI.fetchTwitchGames { (result, error) in
+        self.twitchAPI.fetchTwitchGames {(result, error) in
             if error != nil {
+                self.showAlertWithError(message:error!)
             }
+            
             self.gamesArray = result!
             self.tableView.reloadData()
             SVProgressHUD.dismiss()
+
         }
     }
     
@@ -89,6 +92,16 @@ class TTGMainViewController: UITableViewController {
             vcDetails.game = self.selectedGame
         }
     }
+    
+    // MARK - UIAlertController
+    
+    func showAlertWithError(message:String) {
+        let alert = UIAlertController(title: "Error", message:message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    
 }
 
 // MARK: -  Extensions
