@@ -69,7 +69,8 @@ class TTGDataManager {
                 gamesArray.append(TTGGame.init(game:game))
             }
         } catch {
-            fatalError("Failed to fetch employees: \(error)")
+            gamesArray = [TTGGame]()
+            print("Failed to fetch employees: \(error)")
         }
         
         return gamesArray

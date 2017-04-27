@@ -22,7 +22,9 @@ class TTGMainViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.loadTwitchGames();
+        self.refreshControl?.addTarget(self, action: #selector(TTGMainViewController.handleRefresh(refreshControl:)), for: UIControlEvents.valueChanged)
+        self.loadTwitchGames(refreshControl: nil);
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,9 +33,11 @@ class TTGMainViewController: UITableViewController {
     }
 
     
-    func loadTwitchGames()
+    func loadTwitchGames(refreshControl:UIRefreshControl?)
     {
-        SVProgressHUD.show(withStatus: "Loading")
+        if refreshControl == nil {
+            SVProgressHUD.show(withStatus: "Loading")
+        }
         self.twitchAPI.fetchTwitchGames {(result, error) in
             if error != nil {
                 self.showAlertWithError(message:error!)
@@ -43,7 +47,12 @@ class TTGMainViewController: UITableViewController {
                 self.dataManager.saveData(gamesArray:self.gamesArray)
             }
             self.tableView.reloadData()
-            SVProgressHUD.dismiss()
+            
+            if refreshControl != nil {
+                refreshControl?.endRefreshing()
+            }else {
+                SVProgressHUD.dismiss()
+            }
 
         }
     }
@@ -96,6 +105,12 @@ class TTGMainViewController: UITableViewController {
         gameCell.uilblPosition?.text = "\(indexPath.row + 1)"
 
         return gameCell
+    }
+    
+    // MARK - UIRefreshControl
+    
+    func handleRefresh(refreshControl: UIRefreshControl) {
+        self.loadTwitchGames(refreshControl:refreshControl)
     }
     
     // MARK: -  UITableViewDelegate

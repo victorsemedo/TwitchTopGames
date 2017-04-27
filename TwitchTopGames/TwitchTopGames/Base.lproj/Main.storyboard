@@ -89,6 +89,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Top 50 Games" id="3Sd-Q4-Mzo"/>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="Kje-vd-OOg">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </refreshControl>
                     <connections>
                         <segue destination="XFQ-9U-1cy" kind="show" identifier="showDetailsSegueID" id="huN-bS-lhn"/>
                     </connections>
