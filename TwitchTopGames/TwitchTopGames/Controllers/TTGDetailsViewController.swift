@@ -27,10 +27,17 @@ class TTGDetailsViewController: UIViewController {
         if let link = self.game?.box?.large {
             SVProgressHUD.show(withStatus: "Loading")
             self.uiImgGameBox.downloadedFrom(link: link, completion: {result in
-                self.game?.largeBox = NSData.init(data: result)
-                TTGDataManager().updateGame(game:self.game!, rank:self.rank!)
+               
+                if result != nil {
+                    self.game?.largeBox = NSData.init(data: result!)
+                    TTGDataManager().updateGame(game:self.game!, rank:self.rank!)
+                }
                 SVProgressHUD.dismiss()
             })
+        }else if let imageData = self.game?.largeBox{
+             self.uiImgGameBox.image = UIImage(data:imageData as Data)
+        }else if let imageData = self.game?.smallBox {
+             self.uiImgGameBox.image = UIImage(data:imageData as Data)
         }
         
         if let viewers = self.game?.viewers {

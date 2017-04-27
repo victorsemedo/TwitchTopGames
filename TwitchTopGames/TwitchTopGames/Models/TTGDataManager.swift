@@ -94,7 +94,7 @@ class TTGDataManager {
             if game.largeBox != nil {
                 newGame.setValue(game.largeBox, forKey: TTGTAG.largeBox)
             }
-            if game.largeBox != nil {
+            if game.smallBox != nil {
                 newGame.setValue(game.smallBox, forKey: TTGTAG.smallBox)
             }
         }

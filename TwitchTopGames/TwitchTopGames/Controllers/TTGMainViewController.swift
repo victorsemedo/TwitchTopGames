@@ -67,7 +67,12 @@ class TTGMainViewController: UITableViewController {
         if game.useImgData {
             if let imageData = game.smallBox {
                 gameCell.uiimgGameBox.image = UIImage(data:imageData as Data)
+            }else {
+                
             }
+            gameCell.uiimgGameBox.isHidden = false
+            gameCell.uiIndLoading.isHidden = true
+            gameCell.uiIndLoading.stopAnimating()
         }else {
             if let link = game.box?.small{
                 gameCell.uiimgGameBox.isHidden = true
@@ -77,12 +82,17 @@ class TTGMainViewController: UITableViewController {
                     gameCell.uiimgGameBox.isHidden = false
                     gameCell.uiIndLoading.isHidden = true
                     gameCell.uiIndLoading.stopAnimating()
-                    game.smallBox = NSData.init(data: result)
-                    self.dataManager.updateGame(game:game, rank: indexPath.row+1)
+                    
+                    if(result != nil) {
+                        game.smallBox = NSData.init(data:result!)
+                        self.dataManager.updateGame(game:game, rank: indexPath.row+1)
+                    }else {
+                        
+                    }
                 })
             }
         }
-
+        
         gameCell.uilblPosition?.text = "\(indexPath.row + 1)"
 
         return gameCell
@@ -120,7 +130,7 @@ class TTGMainViewController: UITableViewController {
 
 extension UIImageView {
    
-    func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit, completion: @escaping (Data) -> Void) {
+    func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit, completion: @escaping (Data?) -> Void) {
         contentMode = mode
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard
@@ -129,6 +139,7 @@ extension UIImageView {
                 let data = data, error == nil,
                 let image = UIImage(data: data)
                 else {
+                    completion(nil)
                     return
             }
             DispatchQueue.main.async() { () -> Void in
@@ -138,7 +149,7 @@ extension UIImageView {
             }.resume()
     }
     
-    func downloadedFrom(link: String, contentMode mode: UIViewContentMode = .scaleAspectFit, completion: @escaping (Data) -> Void) {
+    func downloadedFrom(link: String, contentMode mode: UIViewContentMode = .scaleAspectFit, completion: @escaping (Data?) -> Void) {
         guard let url = URL(string: link) else { return }
         downloadedFrom(url: url, contentMode: mode, completion:completion)
     }
