@@ -44,7 +44,7 @@ class TTGMainViewController: UITableViewController {
                 self.gamesArray = self.dataManager.fetchData()
             }else {
                 self.gamesArray = result!
-                self.dataManager.saveData(gamesArray:self.gamesArray)
+                _ = self.dataManager.saveData(gamesArray:self.gamesArray)
             }
             self.tableView.reloadData()
             
@@ -94,7 +94,7 @@ class TTGMainViewController: UITableViewController {
                     
                     if(result != nil) {
                         game.smallBox = NSData.init(data:result!)
-                        self.dataManager.updateGame(game:game, rank: indexPath.row+1)
+                        _ = self.dataManager.updateGame(game:game, rank: indexPath.row+1)
                     }else {
                         
                     }

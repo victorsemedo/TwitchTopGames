@@ -30,7 +30,7 @@ class TTGDetailsViewController: UIViewController {
                
                 if result != nil {
                     self.game?.largeBox = NSData.init(data: result!)
-                    TTGDataManager().updateGame(game:self.game!, rank:self.rank!)
+                    _ = TTGDataManager().updateGame(game:self.game!, rank:self.rank!)
                 }
                 SVProgressHUD.dismiss()
             })

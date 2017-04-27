@@ -14,7 +14,7 @@ class TwitchApiManager: NSObject {
 
     let TWITCH_API_URL = "https://api.twitch.tv/kraken/games/top?limit=50&client_id=pn4ywuv1h97kslj0a1zygtbsduek4b"
     
-    private func loadGameArrayFromJSON(_ json: JSON) -> [TTGGame] {
+    func loadGameArrayFromJSON(_ json: JSON) -> [TTGGame] {
         var gamesArray = [TTGGame]()
         var game:TTGGame
         

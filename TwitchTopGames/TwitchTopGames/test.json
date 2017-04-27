@@ -1,0 +1,55 @@
+{
+  "_total": 1389,
+  "_links": {
+    "self": "https://api.twitch.tv/kraken/games/top?limit=50",
+    "next": "https://api.twitch.tv/kraken/games/top?limit=50&offset=50"
+  },
+  "top": [
+    {
+      "game": {
+        "name": "World of Warships",
+        "popularity": 1690,
+        "_id": 32502,
+        "giantbomb_id": 36235,
+        "box": {
+          "large": "https://static-cdn.jtvnw.net/ttv-boxart/World%20of%20Warships-272x380.jpg",
+          "medium": "https://static-cdn.jtvnw.net/ttv-boxart/World%20of%20Warships-136x190.jpg",
+          "small": "https://static-cdn.jtvnw.net/ttv-boxart/World%20of%20Warships-52x72.jpg",
+          "template": "https://static-cdn.jtvnw.net/ttv-boxart/World%20of%20Warships-{width}x{height}.jpg"
+        },
+        "logo": {
+          "large": "https://static-cdn.jtvnw.net/ttv-logoart/World%20of%20Warships-240x144.jpg",
+          "medium": "https://static-cdn.jtvnw.net/ttv-logoart/World%20of%20Warships-120x72.jpg",
+          "small": "https://static-cdn.jtvnw.net/ttv-logoart/World%20of%20Warships-60x36.jpg",
+          "template": "https://static-cdn.jtvnw.net/ttv-logoart/World%20of%20Warships-{width}x{height}.jpg"
+        },
+        "_links": {}
+      },
+      "viewers": 1748,
+      "channels": 77
+    },
+    {
+      "game": {
+        "name": "Mario Kart 8",
+        "popularity": 1643,
+        "_id": 369588,
+        "giantbomb_id": 42929,
+        "box": {
+          "large": "https://static-cdn.jtvnw.net/ttv-boxart/Mario%20Kart%208-272x380.jpg",
+          "medium": "https://static-cdn.jtvnw.net/ttv-boxart/Mario%20Kart%208-136x190.jpg",
+          "small": "https://static-cdn.jtvnw.net/ttv-boxart/Mario%20Kart%208-52x72.jpg",
+          "template": "https://static-cdn.jtvnw.net/ttv-boxart/Mario%20Kart%208-{width}x{height}.jpg"
+        },
+        "logo": {
+          "large": "https://static-cdn.jtvnw.net/ttv-logoart/Mario%20Kart%208-240x144.jpg",
+          "medium": "https://static-cdn.jtvnw.net/ttv-logoart/Mario%20Kart%208-120x72.jpg",
+          "small": "https://static-cdn.jtvnw.net/ttv-logoart/Mario%20Kart%208-60x36.jpg",
+          "template": "https://static-cdn.jtvnw.net/ttv-logoart/Mario%20Kart%208-{width}x{height}.jpg"
+        },
+        "_links": {}
+      },
+      "viewers": 1688,
+      "channels": 33
+    }
+  ]
+}
